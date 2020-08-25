@@ -23,7 +23,7 @@ class Path {
 
         // match if string is slash separated and if contains only two dots or english letters (uppercase or lowercase)
         // used when change directory (cd function) is called
-        $regex_change = '/^((\/){1}|([A-Za-z]+)?|(\.{2}))(?:(\/){1}(([A-Za-z]+)?|(\.{2})))+$/';
+        $regex_change = '/^((\/){1}|([A-Za-z]+)?|(\.{2}))(?:(\/){1}(([A-Za-z]+)?|(\.{2}))?){0,}$/';
 
         $regex = $for_change_dir ? $regex_change : $regex_init;
         
