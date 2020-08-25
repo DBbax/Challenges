@@ -75,13 +75,14 @@ class Path {
 
 
 try {
+    // $path = new Path();
+    // $path = new Path('/');
     $path = new Path('/a/b/c/d');
     $path->cd('../x');
-    // $path->cd('/a/zx');
+    // $path->cd('../../asd');
     // $path->cd('../../../../../../../../ftp');
     echo $path->currentPath;
-
-    echo "\n";
+    echo "\n";  // just for convenience of reading in the terminal
 
 }
 catch(Exception $e)
@@ -89,6 +90,5 @@ catch(Exception $e)
     echo $e->getMessage();
 }
 
-echo "\n"; // just for convenience of reading in the terminal
 
 // to see the output run in terminal: "php change_directory.php"
