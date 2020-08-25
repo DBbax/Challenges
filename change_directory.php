@@ -77,8 +77,6 @@ class Path {
 try {
     $path = new Path('/a/b/c/d');
     $path->cd('../x');
-    $path->cd('..');
-    $path->cd('/../asd');
     // $path->cd('/a/zx');
     // $path->cd('../../../../../../../../ftp');
     echo $path->currentPath;
