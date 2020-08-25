@@ -19,11 +19,11 @@ class Path {
     {
         // match if string starts with slash (root path), if is slash separated and if contains only english letters (uppercase or lowercase)
         // when instantiating the Path class the root path is mandatory
-        $regex_init = '/^((\/){1}([A-Za-z]+)?)(?:(\/){0,1}(([A-Za-z]+)?))+$/';
+        $regex_init = '/^((\/){1}([A-Za-z]+)?)(?:(\/){1}(([A-Za-z]+)?))+$/';
 
         // match if string is slash separated and if contains only two dots or english letters (uppercase or lowercase)
         // used when change directory (cd function) is called
-        $regex_change = '/^((\/){1}|([A-Za-z]+)?|(\.{2}))(?:(\/){0,1}(([A-Za-z]+)?|(\.{2})))+$/';
+        $regex_change = '/^((\/){1}|([A-Za-z]+)?|(\.{2}))(?:(\/){1}(([A-Za-z]+)?|(\.{2})))+$/';
 
         $regex = $for_change_dir ? $regex_change : $regex_init;
         
