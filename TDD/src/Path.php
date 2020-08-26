@@ -39,7 +39,7 @@ class Path {
             switch($dir_name)
             {
                 case $this->parent_dir:
-                    if(count($exp_current) > 1)     // can't remove the first empty element
+                    if(count($exp_current) > 1)
                         array_pop($exp_current);
                     break;
 
