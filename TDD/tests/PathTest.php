@@ -7,83 +7,59 @@ final class PathTest extends TestCase
     // - - - - - - - - - - - - - - - - - - - - - - - -
     // CAN DO
 
-    public function test_can_be_created__with_no_param(): void
+    public function test_can_be_created__with_no_param()
     {
         $path = new Path();
         $this->assertInstanceOf(Path::class, $path);
     }
 
-    public function test_can_be_created__with_only_rootpath(): void
+    public function test_can_be_created__with_paths()
     {
-        $path = new Path('/');
-        $this->assertInstanceOf(Path::class, $path);
+        $paths = [
+            '/',
+            '/a',
+            '/a/',
+            '/a/b',
+            '/a/b/',
+            '/a/b/c/d',
+            '/A',
+            '/A/b',
+            '/A/B/c',
+            '/A/B/c/D',
+        ];
+
+        foreach($paths as $path)
+        {
+            $path = new Path($path);
+            $this->assertInstanceOf(Path::class, $path);
+        }
+    }
+    
+
+    public function test_can_change_dir__from_path__to_path()
+    {
+        
+        $change_dir__current_path = [
+            '..' => '/a/b/c',
+            '../' => '/a/b/c',
+            '../x' => '/a/b/c/x',
+            '../../../..' => '/',
+            '../../../../..' => '/',
+            '/' => '/',
+            '/a' => '/a',
+            '/A' => '/A',
+            '/a/B/..' => '/a',
+            '/a/B/../c' => '/a/c',
+        ];
+
+        foreach($change_dir__current_path as $change_dir => $current_path)
+        {
+            $path = new Path('/a/b/c/d');
+            $path->cd($change_dir);
+            $this->assertEquals($current_path, $path->currentPath);
+        }
     }
 
-    public function test_can_be_created__with_one_folder(): void
-    {
-        $path = new Path('/a');
-        $this->assertInstanceOf(Path::class, $path);
-    }
-
-    public function test_can_be_created__with_multiple_folders(): void
-    {
-        $path = new Path('/a/b/c/d');
-        $this->assertInstanceOf(Path::class, $path);
-    }
-
-    public function test_can_be_created__with_uppercase_chars(): void
-    {
-        $path = new Path('/A/B');
-        $this->assertInstanceOf(Path::class, $path);
-    }
-
-    public function test_can_be_created__with_uppercase_and_lowercase_chars(): void
-    {
-        $path = new Path('/A/B/c/d');
-        $this->assertInstanceOf(Path::class, $path);
-    }
-
-    public function test_can_change_dir__to_parent()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('..');
-        $this->assertEquals('/a/b/c', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_parent_and_another_child()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('../x');
-        $this->assertEquals('/a/b/c/x', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_root_parent()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('../../../..');
-        $this->assertEquals('/', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_root_parent_with_extra_parent_change()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('../../../../../../../../');
-        $this->assertEquals('/', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_root_directly()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('/');
-        $this->assertEquals('/', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_other_path_directly()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('/x/f');
-        $this->assertEquals('/x/f', $path->currentPath);
-    }
 
     // - - - - - - - - - - - - - - - - - - - - - - - -
     // CAN'T DO
