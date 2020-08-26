@@ -47,8 +47,7 @@ class Path {
             {
                 // if $dir_name is parent directory '..' remove the last item of current exploded path
                 case $this->parent_dir:
-                    if(count($exp_current) > 1)     // can't remove the first empty element
-                        array_pop($exp_current);
+                    array_pop($exp_current);
                     break;
 
                 // if $index is 0 reset current exploded path because the $new_path starts with root_path '/'
@@ -75,12 +74,9 @@ class Path {
 
 
 try {
-    // $path = new Path();
-    // $path = new Path('/');
+    
     $path = new Path('/a/b/c/d');
     $path->cd('../x');
-    // $path->cd('../../asd');
-    // $path->cd('../../../../../../../../ftp');
     echo $path->currentPath;
     echo "\n";  // just for convenience of reading in the terminal
 

@@ -39,8 +39,7 @@ class Path {
             switch($dir_name)
             {
                 case $this->parent_dir:
-                    if(count($exp_current) > 1)
-                        array_pop($exp_current);
+                    array_pop($exp_current);
                     break;
 
                 case '':
