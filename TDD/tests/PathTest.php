@@ -7,140 +7,122 @@ final class PathTest extends TestCase
     // - - - - - - - - - - - - - - - - - - - - - - - -
     // CAN DO
 
-    public function test_can_be_created__with_no_param(): void
+    public function test_can_be_created__with_no_param()
     {
         $path = new Path();
         $this->assertInstanceOf(Path::class, $path);
     }
 
-    public function test_can_be_created__with_only_rootpath(): void
+    public function test_can_be_created__with_paths()
     {
-        $path = new Path('/');
-        $this->assertInstanceOf(Path::class, $path);
+        $paths = [
+            '/',
+            '/a',
+            '/a/',
+            '/a/b',
+            '/a/b/',
+            '/a/b/c/d',
+            '/A',
+            '/A/b',
+            '/A/B/c',
+            '/A/B/c/D',
+        ];
+
+        foreach($paths as $path)
+        {
+            $path = new Path($path);
+            $this->assertInstanceOf(Path::class, $path);
+        }
+    }
+    
+
+    public function test_can_change_dir__with_paths()
+    {
+        
+        $change_dir__current_path = [
+            '..' => '/a/b/c',
+            '../' => '/a/b/c',
+            '../x' => '/a/b/c/x',
+            '../../../..' => '/',
+            '../../../../..' => '/',
+            '/' => '/',
+            '/a' => '/a',
+            '/A' => '/A',
+            '/a/B/..' => '/a',
+            '/a/B/../c' => '/a/c',
+        ];
+
+        foreach($change_dir__current_path as $change_dir => $current_path)
+        {
+            $path = new Path('/a/b/c/d');
+            $path->cd($change_dir);
+            $this->assertEquals($current_path, $path->currentPath);
+        }
     }
 
-    public function test_can_be_created__with_one_folder(): void
-    {
-        $path = new Path('/a');
-        $this->assertInstanceOf(Path::class, $path);
-    }
-
-    public function test_can_be_created__with_multiple_folders(): void
-    {
-        $path = new Path('/a/b/c/d');
-        $this->assertInstanceOf(Path::class, $path);
-    }
-
-    public function test_can_be_created__with_uppercase_chars(): void
-    {
-        $path = new Path('/A/B');
-        $this->assertInstanceOf(Path::class, $path);
-    }
-
-    public function test_can_be_created__with_uppercase_and_lowercase_chars(): void
-    {
-        $path = new Path('/A/B/c/d');
-        $this->assertInstanceOf(Path::class, $path);
-    }
-
-    public function test_can_change_dir__to_parent()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('..');
-        $this->assertEquals('/a/b/c', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_parent_and_another_child()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('../x');
-        $this->assertEquals('/a/b/c/x', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_root_parent()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('../../../..');
-        $this->assertEquals('/', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_root_parent_with_extra_parent_change()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('../../../../../../../../');
-        $this->assertEquals('/', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_root_directly()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('/');
-        $this->assertEquals('/', $path->currentPath);
-    }
-
-    public function test_can_change_dir__to_other_path_directly()
-    {
-        $path = new Path('/a/b/c/d');
-        $path->cd('/x/f');
-        $this->assertEquals('/x/f', $path->currentPath);
-    }
 
     // - - - - - - - - - - - - - - - - - - - - - - - -
     // CAN'T DO
 
-    public function test_cannot_be_created__with_empty_param(): void
+    public function test_cannot_be_created__with_paths(): void
     {
-        $this->expectException(Exception::class);
-        $path = new Path('');
+        $paths = [
+            '',
+            'a',
+            'a/',
+            'a/b',
+            '.',
+            '..',
+            '../',
+            '...',
+            '/a.',
+            '/a/..',
+            '/a/../b',
+            '/a/.../b',
+            '/a/.b',
+            '/a/b.',
+            '/a/.b.',
+            '/a/../',
+            '/a1',
+            '/a/123',
+            '/<?',
+            '/234',
+        ];
+
+        foreach($paths as $path)
+        {
+            $this->expectException(Exception::class);
+            $path = new Path($path);
+        }
     }
 
-    public function test_cannot_be_created__without_initial_rootpath(): void
+
+    public function test_cannot_change_dir__with_paths()
     {
-        $this->expectException(Exception::class);
-        $path = new Path('a/b/');
+        
+        $change_dir__current_path = [
+            '',
+            '.',
+            '...',
+            '/a.',
+            '/a/.../b',
+            '/a/.b',
+            '/a/b.',
+            '/a/.b.',
+            '/a1',
+            '/a/123',
+            '/<?',
+            '/234',
+        ];
+
+        foreach($change_dir__current_path as $change_dir => $current_path)
+        {
+            $this->expectException(Exception::class);
+            $path = new Path('/a/b/c/d');
+            $path->cd($change_dir);
+        }
     }
 
-    public function test_cannot_be_created__with_two_dots(): void
-    {
-        $this->expectException(Exception::class);
-        $path = new Path('..');
-    }
-
-    public function test_cannot_be_created__with_three_or_more_dots(): void
-    {
-        $this->expectException(Exception::class);
-        $path = new Path('...');
-    }
-
-    public function test_cannot_be_created__with_two_dots_in_path(): void
-    {
-        $this->expectException(Exception::class);
-        $path = new Path('/a/../b');
-    }
-
-    public function test_cannot_be_created__with_dot_in_folder_name(): void
-    {
-        $this->expectException(Exception::class);
-        $path = new Path('/a/b/.c');
-    }
-
-    public function test_cannot_be_created__with_number_chars(): void
-    {
-        $this->expectException(Exception::class);
-        $path = new Path('/a/123');
-    }
-
-    public function test_cannot_be_created__with_other_chars(): void
-    {
-        $this->expectException(Exception::class);
-        $path = new Path('/a/$%&');
-    }
-
-    public function test_cannot_change_dir__with_three_or_more_dots_in_path(): void
-    {
-        $this->expectException(Exception::class);
-        $path = new Path('/a/.../b');
-    }
 
     // - - - - - - - - - - - - - - - - - - - - - - - -
 
